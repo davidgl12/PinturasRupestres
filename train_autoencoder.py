@@ -4,8 +4,8 @@ import tensorflow as tf
 from tensorflow.keras import layers, models
 from utils import load_and_resize
 
-DATA_DIR = "data/diario"
-SAVE_PATH = "models/autoencoder.h5"
+DATA_DIR = "./data/train"
+SAVE_PATH = "./models/autoencoder.h5"
 
 
 def build_autoencoder():

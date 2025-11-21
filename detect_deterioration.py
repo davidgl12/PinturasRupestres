@@ -3,12 +3,16 @@ import numpy as np
 import tensorflow as tf
 from utils import *
 import os
+from keras.losses import MeanSquaredError
 
-MODEL_PATH = "models/autoencoder.h5"
-DATA_DIR = "data/diario"
-REF_PATH = "data/referencia.jpg"
 
-autoencoder = tf.keras.models.load_model(MODEL_PATH)
+MODEL_PATH = "./models/autoencoder.h5"
+DATA_DIR = "./data/diario"
+REF_PATH = "./data/referencia.jpg"
+
+autoencoder = tf.keras.models.load_model(
+    MODEL_PATH, custom_objects={"mse": MeanSquaredError()}
+)
 
 
 def detect_change(img_ref, img_today):
@@ -22,6 +26,11 @@ def detect_change(img_ref, img_today):
 
     error_map = np.mean(np.abs(rec_today - rec_ref), axis=2)
     error_map = cv2.normalize(error_map, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
+
+    T = 40
+    coords = np.column_stack(np.where(error_map > T))
+    for y, x in coords[:10]:
+        print(f"Anomalía en coordenadas x={x}, y={y}")
 
     return error_map
 
