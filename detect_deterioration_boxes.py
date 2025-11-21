@@ -24,6 +24,7 @@ def detect_deterioration_with_boxes(reference_path, test_path, output_path=None)
     ref_gray = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
     test_gray = cv2.cvtColor(test, cv2.COLOR_BGR2GRAY)
 
+    # Normalizar la iluminación
     test_gray = normalize_light(test_gray, ref_gray)
 
     cv2.imwrite("./test_gray.jpg", test_gray)
@@ -31,14 +32,12 @@ def detect_deterioration_with_boxes(reference_path, test_path, output_path=None)
 
     # Calcular SSIM
     score, diff = ssim(ref_gray, test_gray, full=True)
-    print("DIFF: ", diff)
     diff = (diff * 255).astype("uint8")
-    print("DIFF: ", diff)
 
-    # Threshold to highlight differences
+    # Threshold para encontrar diferencias
     thresh = cv2.threshold(diff, 230, 255, cv2.THRESH_BINARY_INV)[1]
 
-    # Find contours (areas where deterioration might be present)
+    # encontrar los contornos de las areas diferentes
     contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     boxes = []
@@ -54,7 +53,7 @@ def detect_deterioration_with_boxes(reference_path, test_path, output_path=None)
         boxes.append((x, y, w, h))
         cv2.rectangle(marked, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
-    # Save output image
+    # Guardar imagen
     if output_path:
         cv2.imwrite(output_path, marked)
 
@@ -64,7 +63,7 @@ def detect_deterioration_with_boxes(reference_path, test_path, output_path=None)
 if __name__ == "__main__":
     score, boxes, marked_img = detect_deterioration_with_boxes(
         "./data/referencia.jpg",
-        "./data/pinturaconerror.jpg",
+        "./data/comparar.jpg",
         output_path="PINTURAMARCADA.jpg",
     )
 
