@@ -12,7 +12,7 @@
  python -m venv venv
  .venv\Scripts\Activate.ps1
  pip install opencv-python scikit-image numpy
- python detect_deterioration_boxes
+ python detect_deterioration_boxes.py
  ```
 
 5. Se debería crear un a imagen con el nombre `PINTURAMARCADA.jpg` que contenga los cambios significativos entre las dos imágenes dentro de recuadros rojos.
